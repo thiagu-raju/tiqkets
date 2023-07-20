@@ -12,7 +12,7 @@ db_credentials = {
 }
 
 # Route for the signup page
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
         username = request.form['username']
@@ -24,7 +24,7 @@ def signup():
 
         return "Signup Successful! You can now log in."
     
-    return render_template('home.html')
+    return render_template('signup.html')
 
 # Function to insert user details into the database
 def insert_user(username, password, role):
