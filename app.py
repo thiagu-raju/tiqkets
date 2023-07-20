@@ -22,7 +22,7 @@ def signup():
         # Insert user details into the database
         insert_user(username, password, role)
 
-        return msg
+        return "Signup Successful! You can now log in."
     
     return render_template('home.html')
 
@@ -40,8 +40,7 @@ def insert_user(username, password, role):
         connection.commit()
         cursor.close()
         connection.close()
-        msg = "Signup Successful! You can now log in."
-        return msg
+
     except Exception as e:
         print("Error:", e)
 
