@@ -5,14 +5,14 @@ app = Flask(__name__)
 
 # Replace these credentials with your own MySQL database credentials
 db_credentials = {
-    'host': 'your-hostname',
-    'user': 'your-username',
-    'password': 'your-password',
-    'database': 'your-database',
+    'host': 'thiaguraju.mysql.pythonanywhere-services.com',
+    'user': 'thiaguraju',
+    'password': 'Optimus@01',
+    'database': 'thiaguraju$tiqkets',
 }
 
 # Route for the signup page
-@app.route('/signup', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
         username = request.form['username']
@@ -24,7 +24,7 @@ def signup():
 
         return "Signup Successful! You can now log in."
     
-    return render_template('signup.html')
+    return render_template('home.html')
 
 # Function to insert user details into the database
 def insert_user(username, password, role):
@@ -44,4 +44,4 @@ def insert_user(username, password, role):
         print("Error:", e)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host ='0.0.0.0', debug=True)

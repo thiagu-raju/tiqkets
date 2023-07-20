@@ -75,6 +75,31 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
+name = "mysql-connector-python"
+version = "8.1.0"
+description = "MySQL driver written in Python"
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+protobuf = ">=4.21.1,<=4.21.12"
+
+[package.extras]
+compression = ["lz4 (>=2.1.6,<=4.3.2)", "zstandard (>=0.12.0,<=0.19.0)"]
+dns-srv = ["dnspython (>=1.16.0,<=2.3.0)"]
+gssapi = ["gssapi (>=1.6.9,<=1.8.2)"]
+opentelemetry = ["Deprecated (>=1.2.6)", "typing-extensions (>=3.7.4)", "zipp (>=0.5)"]
+
+[[package]]
+name = "protobuf"
+version = "4.21.12"
+description = ""
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[[package]]
 name = "werkzeug"
 version = "2.3.6"
 description = "The comprehensive WSGI web application library."
@@ -91,7 +116,7 @@ watchdog = ["watchdog (>=2.3)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "d7a65ba75d9fd1d70398a76955d93d28129b8c09a3b56e10fef71ce427090c8b"
+content-hash = "76566465ee660742c1adf4ff2fa066667acb39ac31e274cc4e0aea4c5cf09fe8"
 
 [metadata.files]
 blinker = []
@@ -101,4 +126,6 @@ flask = []
 itsdangerous = []
 jinja2 = []
 markupsafe = []
+mysql-connector-python = []
+protobuf = []
 werkzeug = []
