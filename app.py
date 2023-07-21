@@ -33,8 +33,8 @@ def insert_user(username, password, role):
         cursor = connection.cursor()
 
         # SQL query to insert user details into the table
-        query = "INSERT INTO tblUsers (user_name, password, role) VALUES (%s, %s, %s)"
-        values = (username, password, role)
+        query = "INSERT INTO tblUsers (user_name, password, role, status) VALUES (%s, %s, %s, %s)"
+        values = (username, password, role, "active")
         cursor.execute(query, values)
 
         connection.commit()
