@@ -8,6 +8,8 @@ authors = ["Your Name <you@example.com>"]
 python = "^3.10"
 Flask = "^2.3.2"
 mysql-connector-python = "^8.1.0"
+pymysql = "^1.1.0"
+SQLAlchemy = "^2.0.19"
 
 [tool.poetry.dev-dependencies]
 
