@@ -1,48 +1,87 @@
-from flask import Flask, render_template, request
-import mysql.connector
+from flask import Flask, render_template, request, redirect, url_for, session
+import sqlalchemy
+from sqlalchemy import create_engine
+import re
+import hashlib
 
 app = Flask(__name__)
 
-# Replace these credentials with your own MySQL database credentials
-db_credentials = {
-    'host': 'thiaguraju.mysql.pythonanywhere-services.com',
-    'user': 'thiaguraju',
-    'password': 'Optimus@01',
-    'database': 'thiaguraju$tiqkets',
-}
+app.secret_key = 'xyzsdfg'
 
-# Route for the signup page
-@app.route('/', methods=['GET', 'POST'])
-def signup():
-    if request.method == 'POST':
-        username = request.form['username']
+db_connection_string = "mysql+pymysql://l8mrfcq1wcbdgytn465l:pscale_pw_MD0rI4kaxu35VDQzMLmgLyjtNr4Jee78z7Kvwc4Rwe4@aws.connect.psdb.cloud/tiqkets?charset=utf8mb4"
+
+engine = create_engine(db_connection_string,
+                       connect_args={
+                           "ssl": {
+                               "ssl_ca": "/etc/ssl/cert.pem"
+                           }
+                       })
+
+
+@app.route('/')
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    message = ''
+    if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
+        email = request.form['email']
         password = request.form['password']
-        role = request.form['role']
 
-        # Insert user details into the database
-        insert_user(username, password, role)
+        hashed_password = hashlib.sha256(password.encode()).hexdigest()
 
-        return "Signup Successful! You can now log in."
-    
-    return render_template('home.html')
+        with engine.connect() as conn:
+            result = conn.execute('SELECT * FROM user WHERE email = %s AND password = %s', (email, hashed_password))
+            user = result.fetchone()
+            print (user)
 
-# Function to insert user details into the database
-def insert_user(username, password, role):
-    try:
-        connection = mysql.connector.connect(**db_credentials)
-        cursor = connection.cursor()
+        if user:
+            session['loggedin'] = True
+            session['userid'] = user['userid']
+            session['name'] = user['name']
+            session['email'] = user['email']
+            message = 'Logged in successfully!'
+            return render_template('user.html', message=message)
+        else:
+            message = 'Please enter correct email/password!'
+    return render_template('login.html', message=message)
 
-        # SQL query to insert user details into the table
-        query = "INSERT INTO tblUsers (user_name, password, role, status) VALUES (%s, %s, %s, %s)"
-        values = (username, password, role, "active")
-        cursor.execute(query, values)
 
-        connection.commit()
-        cursor.close()
-        connection.close()
+@app.route('/logout')
+def logout():
+    session.pop('loggedin', None)
+    session.pop('userid', None)
+    session.pop('email', None)
+    return redirect(url_for('login'))
 
-    except Exception as e:
-        print("Error:", e)
 
-if __name__ == '__main__':
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    message = ''
+    if request.method == 'POST' and 'name' in request.form and 'password' in request.form and 'email' in request.form:
+        userName = request.form['name']
+        password = request.form['password']
+        email = request.form['email']
+
+        if not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+            message = 'Invalid email address!'
+        elif not userName or not password or not email:
+            message = 'Please fill out the form!'
+        else:
+            hashed_password = hashlib.sha256(password.encode()).hexdigest()
+
+            with engine.connect() as conn:
+                result = conn.execute('SELECT * FROM user WHERE email = %s', (email,))
+                account = result.fetchone()
+
+                if account:
+                    message = 'Account already exists!'
+                else:
+                    conn.execute('INSERT INTO user (name, email, password) VALUES (%s, %s, %s)', (userName, email, hashed_password))
+                    conn.connection.commit()
+                    message = 'You have successfully registered!'
+    elif request.method == 'POST':
+        message = 'Please fill out the form!'
+    return render_template('register.html', message=message)
+
+
+if __name__ == "__main__":
     app.run(host ='0.0.0.0', debug=True)
