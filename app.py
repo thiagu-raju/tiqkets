@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 app.secret_key = 'xyzsdfg'
 
-db_connection_string = "mysql+pymysql://l8mrfcq1wcbdgytn465l:pscale_pw_MD0rI4kaxu35VDQzMLmgLyjtNr4Jee78z7Kvwc4Rwe4@aws.connect.psdb.cloud/tiqkets?charset=utf8mb4"
+db_connection_string = "mysql+pymysql://l8mrfcq1wcbdgytn465l:pscale_pw_MD0rI4kaxu35VDQzMLmgLyjtNr4Jee78z7Kvwc4Rwe4@aws.connect.psdb.cloud:3306/tiqkets?charset=utf8mb4"
 
 engine = create_engine(db_connection_string,
                        connect_args={
