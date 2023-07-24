@@ -1,5 +1,5 @@
 Flask
 gunicorn
-sqlalchemy
+sqlalchemy==1.4.23
 re
 hashlib
