@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-import mysql.connector
+import sqlalchemy
+from sqlalchemy import create_engine
 import re
 import hashlib
 import os
@@ -8,16 +9,17 @@ app = Flask(__name__)
 
 app.secret_key = 'xyzsdfg'
 
-db_connection_config = {
-    "user": "htij6it2zkli5a86oktc",
-    "password": "pscale_pw_aX6CsOAm41UcXakABl7OZNGAiOu4HGxNdilcuedacGg",
-    "host": "aws.connect.psdb.cloud",
-    "database": "tiqkets",
-    "ssl_ca": "/etc/ssl/cert.pem",
-    "connection_timeout": 60  # Increase the timeout to 60 seconds (adjust as needed)
-}
+db_connection_string = "mysql+pymysql://htij6it2zkli5a86oktc:pscale_pw_aX6CsOAm41UcXakABl7OZNGAiOu4HGxNdilcuedacGg@aws.connect.psdb.cloud/tiqkets?charset=utf8mb4"
 
-conn = mysql.connector.connect(**db_connection_config)
+#db_connection_string = os.environ['DB_CONNECTION_STRING']
+
+engine = create_engine(db_connection_string,
+                       connect_args={
+                           "ssl": {
+                               "ssl_ca": "/etc/ssl/cert.pem"
+                           }
+                       })
+
 
 @app.route('/')
 @app.route('/login', methods=['GET', 'POST'])
@@ -29,11 +31,10 @@ def login():
 
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
 
-        cursor = conn.cursor()
-        cursor.execute('SELECT * FROM user WHERE email = %s AND password = %s', (email, hashed_password))
-        user = cursor.fetchone()
-
-        cursor.close()
+        with engine.connect() as conn:
+            result = conn.execute('SELECT * FROM user WHERE email = %s AND password = %s', (email, hashed_password))
+            user = result.fetchone()
+            print (user)
 
         if user:
             session['loggedin'] = True
@@ -46,12 +47,14 @@ def login():
             message = 'Please enter correct email/password!'
     return render_template('login.html', message=message)
 
+
 @app.route('/logout')
 def logout():
     session.pop('loggedin', None)
     session.pop('userid', None)
     session.pop('email', None)
     return redirect(url_for('login'))
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -68,20 +71,20 @@ def register():
         else:
             hashed_password = hashlib.sha256(password.encode()).hexdigest()
 
-            cursor = conn.cursor()
-            cursor.execute('SELECT * FROM user WHERE email = %s', (email,))
-            account = cursor.fetchone()
+            with engine.connect() as conn:
+                result = conn.execute('SELECT * FROM user WHERE email = %s', (email,))
+                account = result.fetchone()
 
-            if account:
-                message = 'Account already exists!'
-            else:
-                cursor.execute('INSERT INTO user (name, email, password) VALUES (%s, %s, %s)', (userName, email, hashed_password))
-                conn.commit()
-                cursor.close()
-                message = 'You have successfully registered!'
+                if account:
+                    message = 'Account already exists!'
+                else:
+                    conn.execute('INSERT INTO user (name, email, password) VALUES (%s, %s, %s)', (userName, email, hashed_password))
+                    conn.connection.commit()
+                    message = 'You have successfully registered!'
     elif request.method == 'POST':
         message = 'Please fill out the form!'
     return render_template('register.html', message=message)
+
 
 if __name__ == "__main__":
     app.run(host ='0.0.0.0', debug=True)

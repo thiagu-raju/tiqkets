@@ -3,3 +3,5 @@ gunicorn
 sqlalchemy==1.4.23
 requests
 pymysql
+mysql-connector-python
+os-sys
