@@ -124,6 +124,17 @@ ed25519 = ["PyNaCl (>=1.4.0)"]
 rsa = ["cryptography"]
 
 [[package]]
+name = "python-dotenv"
+version = "1.0.0"
+description = "Read key-value pairs from a .env file and set them as environment variables"
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.extras]
+cli = ["click (>=5.0)"]
+
+[[package]]
 name = "sqlalchemy"
 version = "2.0.19"
 description = "Database Abstraction Library"
@@ -184,7 +195,7 @@ watchdog = ["watchdog (>=2.3)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "967761c7b7baaee2c05db914d73bbcc97f01ea025704ceadd30857b44100f6f7"
+content-hash = "5c2ff8fcac353972ca9e55693d07f3b7c018fa1ee9a7b2c9288f668c558d185f"
 
 [metadata.files]
 blinker = []
@@ -198,6 +209,7 @@ markupsafe = []
 mysql-connector-python = []
 protobuf = []
 pymysql = []
+python-dotenv = []
 sqlalchemy = []
 typing-extensions = []
 werkzeug = []

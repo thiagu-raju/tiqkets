@@ -2,3 +2,4 @@ Flask
 gunicorn
 requests
 mysql-connector-python
+python-dotenv mysqlclient

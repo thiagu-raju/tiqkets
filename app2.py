@@ -3,23 +3,19 @@ import mysql.connector
 import re
 import hashlib
 import os
-from dotenv import load_dotenv
-load_dotenv()
 
 app = Flask(__name__)
 
 app.secret_key = 'xyzsdfg'
 
 db_connection_config = {
-    "user": os.getenv("USERNAME"),
-    "password": os.getenv("PASSWORD"),
-    "host": os.getenv("HOST"),
-    "database": os.getenv("DATABASE"),
+    "user": "htij6it2zkli5a86oktc",
+    "password": "pscale_pw_aX6CsOAm41UcXakABl7OZNGAiOu4HGxNdilcuedacGg",
+    "host": "aws.connect.psdb.cloud",
+    "database": "tiqkets",
     "ssl_ca": "/etc/ssl/cert.pem",
     "connection_timeout": 60  # Increase the timeout to 60 seconds (adjust as needed)
 }
-
-print (os.getenv("DATABASE"))
 
 conn = mysql.connector.connect(**db_connection_config)
 

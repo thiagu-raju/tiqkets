@@ -1,1 +1,4 @@
-DB_CONNECTION_STRING=mysql+pymysql://htij6it2zkli5a86oktc:pscale_pw_aX6CsOAm41UcXakABl7OZNGAiOu4HGxNdilcuedacGg@aws.connect.psdb.cloud/tiqkets?charset=utf8mb4
+HOST=aws.connect.psdb.cloud
+USERNAME=z4ejiyeh7bz916ji7il5
+PASSWORD=pscale_pw_sunUmyh9eKCx65EOq7APTIu8ZyGRavmq4DQUBJqDni4
+DATABASE=tiqkets
