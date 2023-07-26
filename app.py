@@ -17,7 +17,6 @@ db_connection_config = {
     "database": os.getenv("DATABASE"),
     "ssl_ca": "/etc/ssl/cert.pem",
     "connection_timeout": 60,  # Increase the timeout to 60 seconds (adjust as needed)
-    "port": 5000,
 }
 
 
@@ -88,4 +87,4 @@ def register():
     return render_template('register.html', message=message)
 
 if __name__ == "__main__":
-    app.run(host ='127.0.0.1', debug=True)
+    app.run(host ='0.0.0.0', debug=True)
